@@ -287,6 +287,25 @@
     .email-row input { border-right: 0.5px solid rgba(201,164,90,0.4); border-bottom: none; }
     .email-row button { padding: 0.875rem; }
   }
+
+  /* Bubbles */
+  .bubble {
+    position: fixed;
+    bottom: -60px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, rgba(201,164,90,0.25), rgba(201,164,90,0.05));
+    border: 0.5px solid rgba(201,164,90,0.15);
+    animation: rise linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes rise {
+    0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.6; }
+    100% { transform: translateY(-110vh) translateX(var(--drift)) scale(var(--end-scale)); opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -410,6 +429,33 @@
   }
 
   loadCount();
+</script>
+
+<script>
+  // Bubbles
+  (function() {
+    const count = 18;
+    for (let i = 0; i < count; i++) {
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      const size = Math.random() * 40 + 8;
+      const left = Math.random() * 100;
+      const duration = Math.random() * 8 + 6;
+      const delay = Math.random() * 12;
+      const drift = (Math.random() - 0.5) * 80;
+      const endScale = Math.random() * 0.5 + 0.8;
+      b.style.cssText = `
+        width: ${size}px;
+        height: ${size}px;
+        left: ${left}%;
+        animation-duration: ${duration}s;
+        animation-delay: ${delay}s;
+        --drift: ${drift}px;
+        --end-scale: ${endScale};
+      `;
+      document.body.appendChild(b);
+    }
+  })();
 </script>
 </body>
 </html>
