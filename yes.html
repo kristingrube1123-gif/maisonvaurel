@@ -319,11 +319,15 @@
   </div>
 
   <div class="email-section" id="emailSection">
-    <p class="email-intro" id="emailIntro">We're building it. Be first to know.</p>
-    <div class="email-row">
-      <input type="email" id="emailInput" placeholder="Your email address">
-      <button onclick="submitEmail()">Notify me</button>
-    </div>
+    <p class="email-intro" id="emailIntro">We're perfecting it. Be first to know.</p>
+    <form action="https://assets.mailerlite.com/jsonp/2341402/forms/187266926046610458/subscribe" method="post" target="_blank" onsubmit="handleSubmit(event)">
+      <div class="email-row">
+        <input type="email" name="fields[email]" id="emailInput" placeholder="Your email address" required autocomplete="email">
+        <input type="hidden" name="ml-submit" value="1">
+        <input type="hidden" name="anticsrf" value="true">
+        <button type="submit">Notify me</button>
+      </div>
+    </form>
     <p class="share-nudge" id="shareNudge">Share this with someone who'd say yes too ↗</p>
   </div>
 
@@ -389,28 +393,19 @@
     }, 300);
   }
 
-  async function submitEmail() {
-    const email = document.getElementById('emailInput').value.trim();
-    if (!email || !email.includes('@')) {
-      document.getElementById('emailInput').style.borderColor = 'rgba(201,164,90,0.8)';
-      return;
-    }
-    try {
-      await fetch('https://assets.mailerlite.com/jsonp/2341402/forms/187266926046610458/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'fields[email]=' + encodeURIComponent(email) + '&ml-submit=1&anticsrf=true'
-      });
-    } catch(e) {}
-
-    document.getElementById('emailSection').style.display = 'none';
-    document.getElementById('buttons').style.display = 'none';
-    document.getElementById('question').textContent = "You're on the list.";
-    document.getElementById('question').style.fontStyle = 'italic';
-    document.getElementById('question').style.color = 'var(--gold-light)';
-    document.querySelector('.subquestion').textContent = "We'll find you when VAUREL is ready.";
-    document.getElementById('shareNudge').style.display = 'block';
-    document.getElementById('shareNudge').style.marginTop = '1.5rem';
+  function handleSubmit(e) {
+    // Let the form submit natively to MailerLite in new tab
+    // Then show thank you state
+    setTimeout(() => {
+      document.getElementById('emailSection').style.display = 'none';
+      document.getElementById('buttons').style.display = 'none';
+      document.getElementById('question').textContent = "You're on the list.";
+      document.getElementById('question').style.fontStyle = 'italic';
+      document.getElementById('question').style.color = 'var(--gold-light)';
+      document.querySelector('.subquestion').textContent = "We'll find you when VAUREL is ready.";
+      document.getElementById('shareNudge').style.display = 'block';
+      document.getElementById('shareNudge').style.marginTop = '1.5rem';
+    }, 500);
   }
 
   loadCount();
