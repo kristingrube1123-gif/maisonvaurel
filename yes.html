@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAUREL — Would you?</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Montserrat:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --petrol: #1C2B35;
+    --petrol-mid: #243540;
+    --gold: #C9A45A;
+    --gold-light: #E8D5A3;
+    --creme: #F2EDE4;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; }
+
+  body {
+    background: var(--petrol);
+    color: var(--creme);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Subtle background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(201,164,90,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(201,164,90,0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 680px;
+    padding: 3rem 2rem;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Logo */
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 4rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.1s forwards;
+  }
+
+  /* Counter */
+  .counter-wrap {
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .counter-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(4rem, 15vw, 8rem);
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    display: block;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .counter-number.bump {
+    transform: scale(1.08);
+  }
+
+  .counter-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    display: block;
+  }
+
+  /* Divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+  .divider-line { width: 40px; height: 0.5px; background: var(--gold); opacity: 0.4; }
+  .divider-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--gold); }
+
+  /* Question */
+  .question {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 5vw, 2.6rem);
+    font-weight: 300;
+    line-height: 1.4;
+    color: var(--creme);
+    margin-bottom: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .question em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .subquestion {
+    font-size: 0.8rem;
+    color: var(--gold-light);
+    font-weight: 200;
+    letter-spacing: 0.05em;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  /* Buttons */
+  .buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .btn-yes {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 1rem 3rem;
+    background: var(--gold);
+    color: var(--petrol);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-yes:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-yes:active { transform: translateY(0); }
+
+  .btn-maybe {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 1rem 3rem;
+    background: transparent;
+    color: var(--gold);
+    border: 0.5px solid rgba(201,164,90,0.4);
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .btn-maybe:hover { border-color: var(--gold); transform: translateY(-1px); }
+  .btn-maybe:active { transform: translateY(0); }
+
+  /* Email form — hidden initially */
+  .email-section {
+    display: none;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s, transform 0.5s;
+    margin-bottom: 2rem;
+  }
+
+  .email-section.visible {
+    display: block;
+    opacity: 1;
+    transform: none;
+  }
+
+  .email-intro {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: var(--gold-light);
+    margin-bottom: 1.25rem;
+  }
+
+  .email-row {
+    display: flex;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .email-row input {
+    flex: 1;
+    background: transparent;
+    border: 0.5px solid rgba(201,164,90,0.4);
+    border-right: none;
+    padding: 0.875rem 1.25rem;
+    color: var(--creme);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 200;
+    letter-spacing: 0.05em;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .email-row input::placeholder { color: rgba(232,213,163,0.3); }
+  .email-row input:focus { border-color: var(--gold); }
+
+  .email-row button {
+    background: var(--gold);
+    border: none;
+    padding: 0.875rem 1.5rem;
+    color: var(--petrol);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.58rem;
+    font-weight: 400;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+  .email-row button:hover { background: var(--gold-light); }
+
+  /* Thank you state */
+  .thankyou {
+    display: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--gold-light);
+    margin-bottom: 2rem;
+  }
+
+  /* Share nudge */
+  .share-nudge {
+    display: none;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(232,213,163,0.5);
+    text-transform: uppercase;
+    margin-top: 1rem;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 4rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: rgba(201,164,90,0.35);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.4s forwards;
+  }
+  .footer a {
+    color: rgba(201,164,90,0.5);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer a:hover { color: var(--gold); }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(14px); }
+    to { opacity:1; transform:none; }
+  }
+
+  @media (max-width: 480px) {
+    .buttons { flex-direction: column; align-items: center; }
+    .btn-yes, .btn-maybe { width: 100%; max-width: 280px; }
+    .email-row { flex-direction: column; }
+    .email-row input { border-right: 0.5px solid rgba(201,164,90,0.4); border-bottom: none; }
+    .email-row button { padding: 0.875rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <p class="logo">Maison VAUREL</p>
+
+  <div class="counter-wrap">
+    <span class="counter-number" id="counter">0</span>
+    <span class="counter-label">people said yes</span>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-dot"></div>
+    <div class="divider-line"></div>
+  </div>
+
+  <p class="question" id="question">
+    Would you celebrate alcohol-free —<br>
+    <em>if the glass was good enough?</em>
+  </p>
+
+  <p class="subquestion">Be honest. No one's watching.</p>
+
+  <div class="buttons" id="buttons">
+    <button class="btn-yes" onclick="vote('yes')">Yes, absolutely</button>
+    <button class="btn-maybe" onclick="vote('maybe')">Almost there</button>
+  </div>
+
+  <div class="email-section" id="emailSection">
+    <p class="email-intro" id="emailIntro">We're building it. Be first to know.</p>
+    <div class="email-row">
+      <input type="email" id="emailInput" placeholder="Your email address">
+      <button onclick="submitEmail()">Notify me</button>
+    </div>
+    <p class="share-nudge" id="shareNudge">Share this with someone who'd say yes too ↗</p>
+  </div>
+
+  <p class="thankyou" id="thankyou"></p>
+
+  <div class="footer">
+    <a href="https://maisonvaurel.com">maisonvaurel.com</a>
+    &nbsp;·&nbsp; Dubai · 0.0%
+  </div>
+
+</div>
+
+<script>
+  // ── Storage key
+  const COUNT_KEY = 'vaurel_yes_count';
+
+  // ── Load and display count
+  async function loadCount() {
+    try {
+      const res = await window.storage.get(COUNT_KEY, true);
+      const n = res ? parseInt(res.value) || 0 : 0;
+      animateCounter(n);
+    } catch(e) {
+      animateCounter(0);
+    }
+  }
+
+  function animateCounter(target) {
+    const el = document.getElementById('counter');
+    const start = parseInt(el.textContent) || 0;
+    const duration = 800;
+    const startTime = performance.now();
+    function step(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(start + (target - start) * ease);
+      if (progress < 1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  }
+
+  async function incrementCount() {
+    try {
+      const res = await window.storage.get(COUNT_KEY, true);
+      const current = res ? parseInt(res.value) || 0 : 0;
+      const next = current + 1;
+      await window.storage.set(COUNT_KEY, String(next), true);
+      return next;
+    } catch(e) {
+      return null;
+    }
+  }
+
+  // ── Vote
+  async function vote(type) {
+    // Hide buttons
+    document.getElementById('buttons').style.opacity = '0';
+    document.getElementById('buttons').style.pointerEvents = 'none';
+
+    if (type === 'yes') {
+      // Increment counter
+      const newCount = await incrementCount();
+      if (newCount !== null) {
+        const el = document.getElementById('counter');
+        el.classList.add('bump');
+        setTimeout(() => el.classList.remove('bump'), 400);
+        animateCounter(newCount);
+      }
+      document.getElementById('emailIntro').textContent = "We're building it. Be first to know.";
+    } else {
+      document.getElementById('emailIntro').textContent = "Tell us when it's ready — we'll convince you.";
+    }
+
+    // Show email form
+    setTimeout(() => {
+      const section = document.getElementById('emailSection');
+      section.style.display = 'block';
+      setTimeout(() => section.classList.add('visible'), 10);
+    }, 300);
+  }
+
+  // ── Submit email (feeds into MailerLite)
+  async function submitEmail() {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('emailInput').style.borderColor = 'rgba(201,164,90,0.8)';
+      return;
+    }
+
+    // Submit to MailerLite
+    try {
+      await fetch('https://assets.mailerlite.com/jsonp/2341402/forms/187266926046610458/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `fields[email]=${encodeURIComponent(email)}&ml-submit=1&anticsrf=true`
+      });
+    } catch(e) { /* silent fail — email captured */ }
+
+    // Show thank you
+    document.getElementById('emailSection').style.display = 'none';
+    document.getElementById('buttons').style.display = 'none';
+    document.getElementById('question').textContent = 'You\'re on the list.';
+    document.getElementById('question').style.fontStyle = 'italic';
+    document.getElementById('question').style.color = 'var(--gold-light)';
+    document.querySelector('.subquestion').textContent = 'We\'ll find you when VAUREL is ready.';
+    document.getElementById('shareNudge').style.display = 'block';
+    document.getElementById('shareNudge').style.marginTop = '1.5rem';
+  }
+
+  // ── Init
+  loadCount();
+</script>
+</body>
+</html>
