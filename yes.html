@@ -320,7 +320,8 @@
 
   <div class="email-section" id="emailSection">
     <p class="email-intro" id="emailIntro">We're perfecting it. Be first to know.</p>
-    <form action="https://assets.mailerlite.com/jsonp/2341402/forms/187266926046610458/subscribe" method="post" target="_blank" onsubmit="handleSubmit(event)">
+    <iframe name="ml_hidden" style="display:none;"></iframe>
+    <form action="https://assets.mailerlite.com/jsonp/2341402/forms/187266926046610458/subscribe" method="post" target="ml_hidden" onsubmit="handleSubmit(event)">
       <div class="email-row">
         <input type="email" name="fields[email]" id="emailInput" placeholder="Your email address" required autocomplete="email">
         <input type="hidden" name="ml-submit" value="1">
