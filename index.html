@@ -117,7 +117,7 @@
   .split-content p { font-size:0.9rem; line-height:2; color:var(--gold-light); margin-bottom:2.5rem; font-weight:200; max-width:380px; }
 
   /* QUOTE */
-  .quote-section { position:relative; height:auto; padding:4rem 2rem; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .quote-section { position:relative; min-height:45vh; display:flex; align-items:center; justify-content:center; overflow:hidden; padding:3rem 2rem; }
   .quote-bg { position:absolute; inset:0; background-image:url('feier.png'); background-size:contain;
 background-repeat:no-repeat; background-position:center top; }
   .quote-bg::after { content:''; position:absolute; inset:0; background:rgba(28,43,53,0.82); }
@@ -187,6 +187,8 @@ background-repeat:no-repeat; background-position:center top; }
     .manifesto,.notify,.product-strip { padding:5rem 2rem; }
     .product-strip-inner { grid-template-columns:1fr !important; gap:2rem; }
 .bottle-visual { margin-top:0; }
+    .quote-section { min-height:auto; padding:2.5rem 1.5rem; }
+.bottle-visual img { max-height:280px !important; }
     footer { flex-direction:column; gap:1.5rem; text-align:center; }
     .statement-strip { padding:1.25rem 2rem; }
   }
@@ -389,7 +391,7 @@ background-repeat:no-repeat; background-position:center top; }
       <a href="#notify" class="btn reveal">Join the waitlist</a>
     </div>
     <div class="bottle-visual reveal">
-  <img src="bottelpic.png" style="max-height:300px; max-width:100%; object-fit:contain;">
+  <img src="bottelpic.png" style="max-height:500px; max-width:100%; object-fit:contain;">
 </div>
     </div>
   </div>
